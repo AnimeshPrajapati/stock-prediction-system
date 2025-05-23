@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Predictor</title>
+</head>
+<body>
+    <h1>Stock Prediction Determiner</h1>
+    <form method="post">
+        <input name="ticker" placeholder="Enter Stock Symbol (e.g. AAPL)">
+        <input type="submit" value="Predict">
+    </form>
+    {% if prediction %}
+        <h3>Predicted Close Price: ${{ prediction|round(2) }}</h3>
+    {% endif %}
+</body>
+</html>
