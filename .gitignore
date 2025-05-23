@@ -1,0 +1,51 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# VS Code settings
+.vscode/
+
+# Mac system files
+.DS_Store
+
+# Logs and databases
+*.log
+*.sqlite3
+
+# Model files (optional: if you want to avoid committing large models)
+model/*.h5
+model/*.pkl
+
+# Python environment files
+*.env
+*.venv
+.env
+
+# Coverage reports
+htmlcov/
+.coverage
+
+# pytest cache
+.pytest_cache/
+
+# mypy cache
+.mypy_cache/
+
+# Ignore IDE/editor project files
+.idea/
+*.iml
