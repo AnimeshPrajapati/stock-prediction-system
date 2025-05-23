@@ -1,0 +1,17 @@
+import yfinance as yf
+import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
+import joblib
+import os
+
+# Step 1: Download sample data
+df = yf.download("AAPL", start="2015-01-01", end="2023-01-01")
+df = df[['Close']]
+
+# Step 2: Fit MinMaxScaler
+scaler = MinMaxScaler()
+scaled_data = scaler.fit_transform(df)
+
+# Step 3: Save scaler to file
+os.makedirs("model", exist_ok=True)
+joblib.dump(scaler, "model/scaler.pkl")
