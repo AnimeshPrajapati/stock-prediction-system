@@ -1,0 +1,47 @@
+import yfinance as yf
+import numpy as np
+import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense
+import joblib
+import os
+
+# Step 1: Download historical data
+df = yf.download("AAPL", start="2015-01-01", end="2023-01-01")
+df = df[['Close']]
+
+# Step 2: Normalize the data
+scaler = MinMaxScaler()
+scaled_data = scaler.fit_transform(df)
+joblib.dump(scaler, "model/scaler.pkl")
+
+# Step 3: Create training sequences
+def create_dataset(data, time_step=60):
+    X, y = [], []
+    for i in range(time_step, len(data)):
+        X.append(data[i-time_step:i])
+        y.append(data[i])
+    return np.array(X), np.array(y)
+
+X, y = create_dataset(scaled_data)
+X = X.reshape((X.shape[0], X.shape[1], 1))
+
+# Step 4: Train-test split
+split = int(len(X) * 0.8)
+X_train, X_test = X[:split], X[split:]
+y_train, y_test = y[:split], y[split:]
+
+# Step 5: Build and train the LSTM model
+model = Sequential([
+    LSTM(50, return_sequences=True, input_shape=(X_train.shape[1], 1)),
+    LSTM(50),
+    Dense(1)
+])
+model.compile(optimizer='adam', loss='mean_squared_error')
+model.fit(X_train, y_train, epochs=5, batch_size=32)
+
+# Step 6: Save model
+os.makedirs("model", exist_ok=True)
+model.save("model/lstm_model.h5")
