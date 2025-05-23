@@ -1,0 +1,31 @@
+import yfinance as yf
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+import joblib
+import os
+import numpy as np
+
+# Download historical data
+df = yf.download("AAPL", start="2015-01-01", end="2023-01-01")
+df = df[['Close']]
+
+# Create lag features for regression
+df['Prev_Close'] = df['Close'].shift(1)
+df = df.dropna()
+
+X = df[['Prev_Close']].values  # Feature: previous day's close
+y = df['Close'].values         # Target: today's close
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Save the model
+os.makedirs("model", exist_ok=True)
+joblib.dump(model, "model/linear_model.pkl")
+
+print("Linear Regression model saved as 'model/linear_model.pkl'")
